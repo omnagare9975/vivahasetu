@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { FiCheck, FiX, FiArrowRight } from 'react-icons/fi';
+import { FiCheck, FiX, FiArrowRight, FiMessageSquare, FiUser } from 'react-icons/fi';
 import api from '../services/api';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 
 export default function Interests() {
   const { t } = useTranslation();
   const { user } = useSelector((s) => s.auth);
+  const navigate = useNavigate();
   const [tab, setTab] = useState('received');
   const [received, setReceived] = useState([]);
   const [sent, setSent] = useState([]);
@@ -43,6 +45,15 @@ export default function Interests() {
       toast.success('Interest cancelled');
       fetchInterests();
     } catch (err) { toast.error('Failed to cancel'); }
+  };
+
+  const handleStartChat = async (userId) => {
+    try {
+      const { data } = await api.get(`/messages/conversations/${userId}`);
+      navigate('/messages', { state: { openConversation: data.data } });
+    } catch (err) {
+      toast.error('Could not open conversation');
+    }
   };
 
   const getProfileData = (interest, isReceived) => {
@@ -89,20 +100,32 @@ export default function Interests() {
                     <p className="text-sm text-gray-600 mt-1 italic line-clamp-1">"{interest.message}"</p>
                   )}
                 </div>
-                <div className="flex items-center gap-2 shrink-0">
+                <div className="flex items-center gap-2 shrink-0 flex-wrap justify-end">
                   <StatusBadge status={interest.status} />
                   {tab === 'received' && interest.status === 'pending' && (
                     <>
                       <button onClick={() => handleRespond(interest._id, 'accepted')}
-                        className="p-2 rounded-xl bg-green-100 text-green-600 hover:bg-green-200 transition-colors">
+                        className="p-2 rounded-xl bg-green-100 text-green-600 hover:bg-green-200 transition-colors" title="Accept">
                         <FiCheck />
                       </button>
                       <button onClick={() => handleRespond(interest._id, 'rejected')}
-                        className="p-2 rounded-xl bg-red-100 text-red-500 hover:bg-red-200 transition-colors">
+                        className="p-2 rounded-xl bg-red-100 text-red-500 hover:bg-red-200 transition-colors" title="Decline">
                         <FiX />
                       </button>
                     </>
                   )}
+                  {interest.status === 'accepted' && (
+                    <button
+                      onClick={() => handleStartChat(p.id)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary-gradient text-white text-xs font-medium hover:opacity-90 transition-opacity"
+                    >
+                      <FiMessageSquare className="text-sm" /> Message
+                    </button>
+                  )}
+                  <Link to={`/profile/${p.id}`}
+                    className="p-2 rounded-xl bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors" title="View Profile">
+                    <FiUser className="text-sm" />
+                  </Link>
                   {tab === 'sent' && interest.status === 'pending' && (
                     <button onClick={() => handleCancel(interest._id)}
                       className="text-xs text-gray-400 hover:text-red-500 transition-colors">

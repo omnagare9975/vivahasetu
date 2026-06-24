@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { FiSend, FiMessageSquare } from 'react-icons/fi';
 import api from '../services/api';
 import { toast } from 'react-toastify';
@@ -8,6 +9,7 @@ import LoadingSpinner from '../components/common/LoadingSpinner';
 
 export default function Messages() {
   const { t } = useTranslation();
+  const location = useLocation();
   const { user } = useSelector((s) => s.auth);
   const [conversations, setConversations] = useState([]);
   const [activeConv, setActiveConv] = useState(null);
@@ -37,6 +39,12 @@ export default function Messages() {
   useEffect(() => {
     fetchConversations();
   }, []);
+
+  useEffect(() => {
+    if (location.state?.openConversation) {
+      setActiveConv(location.state.openConversation);
+    }
+  }, [location.state]);
 
   useEffect(() => {
     if (activeConv) {

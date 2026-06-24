@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { FiCamera, FiTrash2, FiStar, FiCheck } from 'react-icons/fi';
+import { FiCamera, FiTrash2, FiStar, FiCheck, FiChevronDown } from 'react-icons/fi';
 import { fetchMyProfile, updateProfile, uploadPhoto, deletePhoto, setProfilePhoto } from '../redux/slices/profileSlice';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 
@@ -122,26 +122,43 @@ export default function EditProfile() {
         )}
       </div>
 
-      {/* Tab Navigation */}
-      <div className="flex gap-1 overflow-x-auto pb-2 mb-6 scrollbar-hide">
-        {TABS.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`shrink-0 px-4 py-2 rounded-xl text-sm font-medium transition-colors whitespace-nowrap ${
-              activeTab === tab
-                ? 'bg-primary-gradient text-white shadow-sm'
-                : 'text-gray-600 bg-gray-100 hover:bg-gray-200'
-            }`}
+      {/* Tab Navigation — dropdown on mobile, pills on desktop */}
+      <div className="mb-5">
+        {/* Mobile: Dropdown selector */}
+        <div className="md:hidden relative">
+          <select
+            value={activeTab}
+            onChange={(e) => setActiveTab(e.target.value)}
+            className="w-full appearance-none bg-white border border-gray-200 rounded-2xl px-4 py-3.5 pr-10 text-sm font-semibold text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-300"
           >
-            {tabLabels[tab]}
-          </button>
-        ))}
+            {TABS.map((tab) => (
+              <option key={tab} value={tab}>{tabLabels[tab]}</option>
+            ))}
+          </select>
+          <FiChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+        </div>
+
+        {/* Desktop: Pill tabs */}
+        <div className="hidden md:flex gap-1 overflow-x-auto pb-2 scrollbar-hide">
+          {TABS.map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`shrink-0 px-4 py-2 rounded-xl text-sm font-medium transition-colors whitespace-nowrap ${
+                activeTab === tab
+                  ? 'bg-primary-gradient text-white shadow-sm'
+                  : 'text-gray-600 bg-gray-100 hover:bg-gray-200'
+              }`}
+            >
+              {tabLabels[tab]}
+            </button>
+          ))}
+        </div>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         {activeTab !== 'photos' ? (
-          <div className="card p-6">
+          <div className="card p-4 md:p-6">
             {activeTab === 'personal' && <PersonalFields register={register} errors={errors} t={t} />}
             {activeTab === 'professional' && <ProfessionalFields register={register} t={t} />}
             {activeTab === 'lifestyle' && <LifestyleFields register={register} t={t} />}
@@ -149,8 +166,8 @@ export default function EditProfile() {
             {activeTab === 'about' && <AboutFields register={register} t={t} />}
             {activeTab === 'preferences' && <PreferenceFields register={register} t={t} />}
 
-            <div className="mt-6 pt-5 border-t border-gray-100 flex justify-end">
-              <button type="submit" disabled={updating} className="btn-primary px-8">
+            <div className="mt-6 pt-5 border-t border-gray-100 flex justify-stretch md:justify-end">
+              <button type="submit" disabled={updating} className="btn-primary w-full md:w-auto px-8">
                 {updating ? <LoadingSpinner size="sm" /> : null}
                 {t('profile.save')}
               </button>
@@ -187,7 +204,7 @@ function PersonalFields({ register, errors, t }) {
   const MOTHER_TONGUES = ['Hindi', 'Bengali', 'Marathi', 'Telugu', 'Tamil', 'Gujarati', 'Kannada', 'Malayalam', 'Odia', 'Punjabi', 'Other'];
 
   return (
-    <div className="grid md:grid-cols-2 gap-5">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
       <FormField label={t('profile.full_name')}>
         <input {...register('fullName')} className="input-field" placeholder="Full Name" />
       </FormField>
@@ -243,7 +260,7 @@ function ProfessionalFields({ register, t }) {
   const INCOMES = ['Below 3 LPA', '3-5 LPA', '5-8 LPA', '8-12 LPA', '12-18 LPA', '18-25 LPA', '25-50 LPA', '50+ LPA'];
 
   return (
-    <div className="grid md:grid-cols-2 gap-5">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
       <FormField label={t('profile.education')}>
         <select {...register('education')} className="input-field">
           <option value="">Select</option>
@@ -277,7 +294,7 @@ function ProfessionalFields({ register, t }) {
 
 function LifestyleFields({ register, t }) {
   return (
-    <div className="grid md:grid-cols-2 gap-5">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
       <FormField label={t('profile.diet')}>
         <select {...register('diet')} className="input-field">
           <option value="">Select</option>
@@ -310,7 +327,7 @@ function LifestyleFields({ register, t }) {
 
 function FamilyFields({ register, t }) {
   return (
-    <div className="grid md:grid-cols-2 gap-5">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
       <FormField label="Father's Occupation">
         <input {...register('fatherOccupation')} className="input-field" placeholder="Business / Service" />
       </FormField>
@@ -365,7 +382,7 @@ function AboutFields({ register, t }) {
 
 function PreferenceFields({ register, t }) {
   return (
-    <div className="grid md:grid-cols-2 gap-5">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
       <FormField label="Preferred Age (Min)">
         <input {...register('partnerPreferences.ageMin', { valueAsNumber: true })} type="number" min={18} className="input-field" placeholder="22" />
       </FormField>
@@ -378,7 +395,7 @@ function PreferenceFields({ register, t }) {
 
 function PhotosTab({ photos, onUpload, onDelete, onSetProfile, uploading, t }) {
   return (
-    <div className="card p-6">
+    <div className="card p-4 md:p-6">
       <div className="flex items-center justify-between mb-5">
         <h3 className="font-semibold text-gray-800">{t('profile.photos')} ({photos.length}/10)</h3>
         <label className={`btn-primary text-sm cursor-pointer ${uploading ? 'opacity-60 pointer-events-none' : ''}`}>
@@ -397,16 +414,17 @@ function PhotosTab({ photos, onUpload, onDelete, onSetProfile, uploading, t }) {
           </label>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
           {photos.map((photo) => (
-            <div key={photo._id} className="relative group rounded-2xl overflow-hidden aspect-square">
+            <div key={photo._id} className="relative rounded-2xl overflow-hidden aspect-square">
               <img src={photo.url} alt="" className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+              {/* Always visible action bar at bottom for touch devices */}
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 flex items-center justify-end gap-1.5">
                 {!photo.isProfilePhoto && (
                   <button
                     type="button"
                     onClick={() => onSetProfile(photo._id)}
-                    className="p-2 bg-white/90 rounded-full text-primary-600 hover:bg-white transition-colors"
+                    className="p-1.5 bg-white/90 rounded-full text-primary-600 active:bg-white"
                     title={t('profile.set_as_profile')}
                   >
                     <FiStar className="text-sm" />
@@ -415,7 +433,7 @@ function PhotosTab({ photos, onUpload, onDelete, onSetProfile, uploading, t }) {
                 <button
                   type="button"
                   onClick={() => onDelete(photo._id)}
-                  className="p-2 bg-white/90 rounded-full text-red-500 hover:bg-white transition-colors"
+                  className="p-1.5 bg-white/90 rounded-full text-red-500 active:bg-white"
                   title={t('profile.delete_photo')}
                 >
                   <FiTrash2 className="text-sm" />

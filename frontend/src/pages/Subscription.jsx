@@ -93,18 +93,18 @@ export default function Subscription() {
 
   return (
     <div className="animate-fade-in">
-      <div className="text-center mb-10">
-        <h1 className="text-3xl font-heading font-bold text-gray-900">{t('subscription.title')}</h1>
-        <p className="text-gray-500 mt-2">{t('subscription.subtitle')}</p>
+      <div className="text-center mb-6 md:mb-10">
+        <h1 className="text-2xl md:text-3xl font-heading font-bold text-gray-900">{t('subscription.title')}</h1>
+        <p className="text-gray-500 mt-2 text-sm md:text-base">{t('subscription.subtitle')}</p>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 max-w-5xl mx-auto">
         {PLANS_DATA.map((plan) => {
           const isCurrent = user?.role === plan.id || (user?.role === 'user' && plan.id === 'free');
           return (
             <div
               key={plan.id}
-              className={`card p-6 relative flex flex-col ${plan.popular ? 'ring-2 ring-primary-400 shadow-xl scale-105' : ''}`}
+              className={`card p-5 md:p-6 relative flex flex-col ${plan.popular ? 'ring-2 ring-primary-400 shadow-xl' : ''}`}
             >
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary-gradient text-white text-sm font-bold px-5 py-1.5 rounded-full shadow">
@@ -193,8 +193,8 @@ function PaymentHistory() {
   return (
     <div className="mt-12">
       <h2 className="text-xl font-heading font-semibold text-gray-900 mb-5">{t('subscription.payment_history')}</h2>
-      <div className="card overflow-hidden">
-        <table className="w-full text-sm">
+      <div className="card overflow-hidden overflow-x-auto">
+        <table className="w-full text-sm min-w-[500px]">
           <thead>
             <tr className="bg-gray-50 border-b border-gray-100">
               <th className="text-left px-4 py-3 text-gray-500 font-medium">Invoice</th>

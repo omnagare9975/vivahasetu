@@ -80,6 +80,7 @@ export default function Navbar() {
                 <NavLink to="/dashboard">{t('nav.dashboard')}</NavLink>
                 <NavLink to="/search">{t('nav.search')}</NavLink>
                 <NavLink to="/matches">{t('nav.matches')}</NavLink>
+                <NavLink to="/interests">Interests</NavLink>
                 <NavLink to="/messages" badge={unreadCount}>
                   {t('nav.messages')}
                 </NavLink>
@@ -191,6 +192,7 @@ export default function Navbar() {
                 <MobileNavLink to="/dashboard">{t('nav.dashboard')}</MobileNavLink>
                 <MobileNavLink to="/search">{t('nav.search')}</MobileNavLink>
                 <MobileNavLink to="/matches">{t('nav.matches')}</MobileNavLink>
+                <MobileNavLink to="/interests">Interests</MobileNavLink>
                 <MobileNavLink to="/messages">{t('nav.messages')}</MobileNavLink>
                 <MobileNavLink to="/shortlist">{t('nav.shortlist')}</MobileNavLink>
                 <MobileNavLink to="/subscription">{t('nav.subscription')}</MobileNavLink>

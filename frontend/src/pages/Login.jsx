@@ -101,11 +101,11 @@ export default function Login() {
           </div>
 
           {/* Demo credentials */}
-          <div className="mt-4 p-3 bg-blue-50 rounded-xl">
+          {/* <div className="mt-4 p-3 bg-blue-50 rounded-xl">
             <p className="text-xs text-blue-600 font-medium mb-1">Demo Credentials</p>
             <p className="text-xs text-blue-500">User: rahul@example.com / Test@123</p>
             <p className="text-xs text-blue-500">Admin: admin@vivahsetu.com / Admin@123</p>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
