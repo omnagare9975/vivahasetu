@@ -16,7 +16,7 @@
   },
   "hero": {
     "tagline": "Find Your Perfect Life Partner",
-    "subtitle": "Join millions of Indians finding love through VivahSetu – India's most trusted matrimony platform.",
+    "subtitle": "Join millions of Indians finding love through Vivansa – India's most trusted matrimony platform.",
     "register_free": "Register Free",
     "view_profiles": "View Profiles",
     "stats": {
@@ -225,7 +225,12 @@
     "contact": "Contact Us",
     "help": "Help Center",
     "success": "Success Stories",
-    "copyright": "© 2026 VivahSetu. All rights reserved.",
+    "copyright": "© 2026 Vivansa. All rights reserved.",
     "made_with": "Made with ❤️ in India"
+  },
+  "support": {
+    "report": "Report Profile",
+    "help_title": "Help & Support",
+    "how_to_use": "How to Use App"
   }
 }

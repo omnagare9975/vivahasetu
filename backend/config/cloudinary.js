@@ -8,7 +8,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const storage = new CloudinaryStorage({
+const photoStorage = new CloudinaryStorage({
   cloudinary,
   params: {
     folder: 'vivahsetu/profiles',
@@ -17,9 +17,19 @@ const storage = new CloudinaryStorage({
   },
 });
 
+const documentStorage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: 'vivahsetu/documents',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'pdf'],
+    resource_type: 'auto',
+    type: 'authenticated',
+  },
+});
+
 const upload = multer({
-  storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  storage: photoStorage,
+  limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
     if (allowed.includes(file.mimetype)) cb(null, true);
@@ -27,4 +37,14 @@ const upload = multer({
   },
 });
 
-module.exports = { cloudinary, upload };
+const uploadDocument = multer({
+  storage: documentStorage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    const allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'application/pdf'];
+    if (allowed.includes(file.mimetype)) cb(null, true);
+    else cb(new Error('Only image or PDF files are allowed'), false);
+  },
+});
+
+module.exports = { cloudinary, upload, uploadDocument };

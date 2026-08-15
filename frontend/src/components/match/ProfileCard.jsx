@@ -2,11 +2,21 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { FiHeart, FiMapPin, FiBriefcase, FiStar, FiCheckCircle } from 'react-icons/fi';
 
-export default function ProfileCard({ profile, user, compatibilityScore, matchReasons = [], compact = false }) {
+export default function ProfileCard({
+  profile,
+  user,
+  compatibilityScore,
+  matchReasons = [],
+  matchFactors = [],
+  compact = false,
+}) {
   const { t } = useTranslation();
   if (!profile) return null;
 
   const profilePhoto = profile.profilePhoto || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.fullName || 'User')}&background=e91e8c&color=fff&size=200`;
+  const factors = matchFactors.length
+    ? matchFactors.filter((f) => f.matched).slice(0, 6)
+    : matchReasons.slice(0, 5).map((r) => ({ label: r, matched: true }));
 
   if (compact) {
     return (
@@ -22,7 +32,7 @@ export default function ProfileCard({ profile, user, compatibilityScore, matchRe
                 <FiCheckCircle className="text-sm" />
               </div>
             )}
-            {compatibilityScore && (
+            {compatibilityScore != null && (
               <div className="absolute bottom-2 right-2 bg-black/60 backdrop-blur-sm text-white text-xs font-bold px-2 py-1 rounded-full">
                 {compatibilityScore}% {t('match.compatible')}
               </div>
@@ -39,6 +49,15 @@ export default function ProfileCard({ profile, user, compatibilityScore, matchRe
                 <span className="truncate">{[profile.city, profile.state].filter(Boolean).join(', ')}</span>
               </div>
             )}
+            {factors.length > 0 && (
+              <div className="flex flex-wrap gap-1 mt-2">
+                {factors.slice(0, 2).map((f) => (
+                  <span key={f.label} className="text-[10px] px-1.5 py-0.5 bg-green-50 text-green-700 rounded border border-green-100">
+                    {f.label}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </Link>
@@ -48,7 +67,6 @@ export default function ProfileCard({ profile, user, compatibilityScore, matchRe
   return (
     <div className="card overflow-hidden animate-fade-in">
       <div className="flex flex-col sm:flex-row gap-0">
-        {/* Photo */}
         <div className="relative sm:w-52 h-56 sm:h-auto overflow-hidden shrink-0">
           <img src={profilePhoto} alt={profile.fullName} className="w-full h-full object-cover" />
           {user?.role === 'premium' && (
@@ -61,7 +79,6 @@ export default function ProfileCard({ profile, user, compatibilityScore, matchRe
           )}
         </div>
 
-        {/* Details */}
         <div className="flex-1 p-5">
           <div className="flex items-start justify-between gap-2">
             <div>
@@ -74,7 +91,7 @@ export default function ProfileCard({ profile, user, compatibilityScore, matchRe
                 ].filter(Boolean).join(' • ')}
               </p>
             </div>
-            {compatibilityScore && (
+            {compatibilityScore != null && (
               <div className="shrink-0 text-center bg-primary-50 border border-primary-100 rounded-xl px-3 py-2">
                 <div className="text-2xl font-bold text-gradient">{compatibilityScore}%</div>
                 <div className="text-[10px] text-gray-500 font-medium">Match</div>
@@ -113,13 +130,16 @@ export default function ProfileCard({ profile, user, compatibilityScore, matchRe
             <p className="text-sm text-gray-500 mt-3 line-clamp-2">{profile.bio}</p>
           )}
 
-          {matchReasons.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mt-3">
-              {matchReasons.slice(0, 3).map((r) => (
-                <span key={r} className="px-2 py-0.5 bg-green-50 text-green-700 text-xs rounded-full border border-green-200">
-                  ✓ {r}
-                </span>
-              ))}
+          {factors.length > 0 && (
+            <div className="mt-3">
+              <p className="text-xs font-medium text-gray-500 mb-1.5">{t('match.match_reasons')}</p>
+              <div className="flex flex-wrap gap-1.5">
+                {factors.map((f) => (
+                  <span key={f.label} className="px-2 py-0.5 bg-green-50 text-green-700 text-xs rounded-full border border-green-200">
+                    ✓ {f.label}{f.detail ? `: ${f.detail}` : ''}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
 

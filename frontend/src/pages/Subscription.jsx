@@ -19,9 +19,9 @@ const PLANS_DATA = [
   {
     id: 'silver',
     name: 'Silver',
-    price: 49900,
-    priceDisplay: '₹499',
-    period: '/3 months',
+    price: 5000,
+    priceDisplay: '₹50',
+    period: '/month',
     color: 'primary',
     popular: true,
     features: ['Unlimited Profile Views', 'Unlimited Interests', 'Private Messaging', 'Advanced Filters', 'Email Support'],
@@ -30,9 +30,9 @@ const PLANS_DATA = [
   {
     id: 'gold',
     name: 'Gold',
-    price: 99900,
-    priceDisplay: '₹999',
-    period: '/6 months',
+    price: 9900,
+    priceDisplay: '₹99',
+    period: '/month',
     color: 'gold',
     features: ['All Silver Features', 'Priority Visibility', 'Premium Badge on Profile', 'Featured in Search Results', 'Dedicated Support', '2x More Profile Views'],
     notIncluded: [],
@@ -63,7 +63,7 @@ export default function Subscription() {
         key: keyId,
         amount,
         currency,
-        name: 'VivahSetu',
+        name: 'Vivansa',
         description: `${planId.charAt(0).toUpperCase() + planId.slice(1)} Plan`,
         order_id: orderId,
         handler: async (response) => {
@@ -81,7 +81,7 @@ export default function Subscription() {
           }
         },
         prefill: { name: `${user?.firstName} ${user?.lastName}`, email: user?.email },
-        theme: { color: '#e91e8c' },
+        theme: { color: '#9f1239' },
       };
 
       const rzp = new window.Razorpay(options);

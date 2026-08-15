@@ -48,6 +48,7 @@ app.use('/api/payments', require('./routes/payment'));
 app.use('/api/notifications', require('./routes/notification'));
 app.use('/api/shortlist', require('./routes/shortlist'));
 app.use('/api/admin', require('./routes/admin'));
+app.use('/api/reports', require('./routes/report'));
 
 // Error handling
 app.use(notFound);

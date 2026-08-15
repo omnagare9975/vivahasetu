@@ -6,8 +6,8 @@ const User = require('../models/User');
 const { sendSuccess, sendError } = require('../utils/apiResponse');
 
 const PLANS = {
-  silver: { amount: 49900, duration: 3, features: { profileViews: -1, interests: -1, messages: true, priorityVisibility: false, premiumBadge: false } },
-  gold: { amount: 99900, duration: 6, features: { profileViews: -1, interests: -1, messages: true, priorityVisibility: true, premiumBadge: true } },
+  silver: { amount: 5000, duration: 1, features: { profileViews: -1, interests: -1, messages: true, priorityVisibility: false, premiumBadge: false } },
+  gold: { amount: 9900, duration: 1, features: { profileViews: -1, interests: -1, messages: true, priorityVisibility: true, premiumBadge: true } },
 };
 
 // @desc   Create Razorpay order

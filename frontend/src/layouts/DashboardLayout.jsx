@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import {
   FiGrid, FiSearch, FiHeart, FiMessageSquare, FiBookmark,
-  FiUser, FiStar, FiBell, FiSettings, FiChevronLeft, FiChevronRight,
+  FiUser, FiStar, FiBell, FiSettings, FiChevronLeft, FiChevronRight, FiBookOpen,
 } from 'react-icons/fi';
 import Navbar from '../components/common/Navbar';
 
@@ -25,10 +25,11 @@ export default function DashboardLayout() {
     { to: '/notifications', icon: FiBell, label: t('nav.notifications'), badge: unreadCount },
     { to: '/profile/edit', icon: FiUser, label: t('nav.profile') },
     { to: '/settings', icon: FiSettings, label: 'Settings' },
+    { to: '/app-guide', icon: FiBookOpen, label: 'How to Use' },
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen matrimony-pattern">
       <Navbar />
       <div className="pt-16 flex">
         {/* Sidebar */}

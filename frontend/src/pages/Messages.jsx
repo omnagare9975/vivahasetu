@@ -5,6 +5,7 @@ import { FiSend, FiMessageSquare } from 'react-icons/fi';
 import api from '../services/api';
 import { toast } from 'react-toastify';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import SensitiveContent from '../components/common/SensitiveContent';
 
 export default function Messages() {
   const { t } = useTranslation();
@@ -75,7 +76,7 @@ export default function Messages() {
     <div className="animate-fade-in">
       <h1 className="text-2xl font-heading font-bold text-gray-900 mb-5">{t('messages.inbox')}</h1>
 
-      <div className="card overflow-hidden flex h-[calc(100vh-14rem)]">
+      <SensitiveContent className="card overflow-hidden flex h-[calc(100vh-14rem)]">
         {/* Conversations List */}
         <div className={`${activeConv ? 'hidden md:flex' : 'flex'} flex-col w-full md:w-72 border-r border-gray-100 shrink-0`}>
           <div className="p-4 border-b border-gray-100">
@@ -193,7 +194,7 @@ export default function Messages() {
             </>
           )}
         </div>
-      </div>
+      </SensitiveContent>
     </div>
   );
 }

@@ -57,6 +57,20 @@ export const setProfilePhoto = createAsyncThunk('profile/setProfilePhoto', async
   }
 });
 
+export const uploadProfessionDocument = createAsyncThunk(
+  'profile/uploadProfessionDoc',
+  async (formData, { rejectWithValue }) => {
+    try {
+      const { data } = await api.post('/profiles/profession-verification', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      return data.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || 'Upload failed');
+    }
+  }
+);
+
 const profileSlice = createSlice({
   name: 'profile',
   initialState: {

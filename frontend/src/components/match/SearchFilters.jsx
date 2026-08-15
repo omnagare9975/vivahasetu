@@ -39,9 +39,10 @@ export default function SearchFilters({ filters, onChange, onApply, onClear }) {
       <FilterGroup label={t('auth.gender')}>
         <select value={filters.gender || ''} onChange={(e) => handleChange('gender', e.target.value)}
           className="input-field text-sm py-2">
-          <option value="">Any</option>
+          <option value="">Opposite (default)</option>
           <option value="male">{t('auth.male')}</option>
           <option value="female">{t('auth.female')}</option>
+          <option value="any">Any</option>
         </select>
       </FilterGroup>
 

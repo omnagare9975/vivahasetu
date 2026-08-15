@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { FiUser, FiMail, FiLock, FiPhone, FiCalendar, FiEye, FiEyeOff, FiHeart } from 'react-icons/fi';
 import { registerUser } from '../redux/slices/authSlice';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import { validateIndianMobile, normalizeIndianMobile } from '../utils/phone';
 
 export default function Register() {
   const { t } = useTranslation();
@@ -19,10 +20,15 @@ export default function Register() {
 
   const onSubmit = async (data) => {
     const { confirmPassword, ...userData } = data;
+    userData.mobile = normalizeIndianMobile(userData.mobile);
+    if (!validateIndianMobile(userData.mobile)) {
+      toast.error('Mobile number must be exactly 10 digits');
+      return;
+    }
     const result = await dispatch(registerUser(userData));
     if (registerUser.fulfilled.match(result)) {
-      toast.success('Welcome to VivahSetu! Please verify your email.');
-      navigate('/dashboard');
+      toast.success('Welcome to Vivansa! Please verify your email.');
+      navigate('/dashboard', { replace: true });
     } else {
       toast.error(result.payload || 'Registration failed');
     }
@@ -95,11 +101,13 @@ export default function Register() {
                 <input
                   {...register('mobile', {
                     required: t('common.required'),
-                    pattern: { value: /^[6-9]\d{9}$/, message: 'Invalid Indian mobile number' },
+                    validate: (v) => validateIndianMobile(v) || 'Enter exactly 10 digits starting with 6–9',
                   })}
                   type="tel"
+                  inputMode="numeric"
+                  maxLength={10}
                   placeholder="9876543210"
-                  className={`input-field pl-16 ${errors.mobile ? 'border-red-400' : ''}`}
+                  className={`input-field pl-16 sensitive-field ${errors.mobile ? 'border-red-400' : ''}`}
                 />
               </div>
               {errors.mobile && <p className="text-red-500 text-xs mt-1">{errors.mobile.message}</p>}

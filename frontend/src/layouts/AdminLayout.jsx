@@ -1,6 +1,6 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { FiGrid, FiUsers, FiCheckCircle, FiCreditCard, FiLogOut } from 'react-icons/fi';
+import { FiGrid, FiUsers, FiCheckCircle, FiCreditCard, FiLogOut, FiFlag } from 'react-icons/fi';
 import { FiHeart } from 'react-icons/fi';
 import { useDispatch } from 'react-redux';
 import { logout } from '../redux/slices/authSlice';
@@ -16,6 +16,7 @@ export default function AdminLayout() {
     { to: '/admin', icon: FiGrid, label: t('admin.dashboard'), exact: true },
     { to: '/admin/users', icon: FiUsers, label: t('admin.users') },
     { to: '/admin/verifications', icon: FiCheckCircle, label: t('admin.verifications') },
+    { to: '/admin/reports', icon: FiFlag, label: 'Reports' },
     { to: '/admin/payments', icon: FiCreditCard, label: t('admin.payments') },
   ];
 
@@ -34,7 +35,7 @@ export default function AdminLayout() {
               <FiHeart className="text-white" />
             </div>
             <div>
-              <span className="font-bold text-white">VivahSetu</span>
+              <span className="font-bold text-white">Vivansa</span>
               <p className="text-xs text-gray-400">Admin Panel</p>
             </div>
           </div>

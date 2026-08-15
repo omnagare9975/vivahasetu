@@ -6,6 +6,7 @@ import { searchProfiles, setFilters, clearFilters } from '../redux/slices/matchS
 import SearchFilters from '../components/match/SearchFilters';
 import ProfileCard from '../components/match/ProfileCard';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import AdBanner from '../components/common/AdBanner';
 
 export default function Search() {
   const { t } = useTranslation();
@@ -71,13 +72,14 @@ export default function Search() {
 
       <div className="flex gap-6">
         {/* Filters Sidebar */}
-        <div className={`${mobileFilterOpen ? 'block' : 'hidden'} lg:block w-full lg:w-72 shrink-0`}>
+        <div className={`${mobileFilterOpen ? 'block' : 'hidden'} lg:block w-full lg:w-72 shrink-0 space-y-4`}>
           <SearchFilters
             filters={localFilters}
             onChange={setLocalFilters}
             onApply={handleApplyFilters}
             onClear={handleClearFilters}
           />
+          <AdBanner placement="search" />
         </div>
 
         {/* Results */}
@@ -104,6 +106,9 @@ export default function Search() {
                     key={profile._id}
                     profile={profile}
                     user={profile.userId}
+                    compatibilityScore={profile.compatibilityScore}
+                    matchReasons={profile.matchReasons}
+                    matchFactors={profile.matchFactors}
                     compact={viewMode === 'grid'}
                   />
                 ))}

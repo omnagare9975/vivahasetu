@@ -3,6 +3,8 @@ const Profile = require('../models/Profile');
 const Payment = require('../models/Payment');
 const Subscription = require('../models/Subscription');
 const Notification = require('../models/Notification');
+const Report = require('../models/Report');
+const SupportTicket = require('../models/SupportTicket');
 const { sendSuccess, sendError } = require('../utils/apiResponse');
 const { getPaginationData, getSkip } = require('../utils/helpers');
 
@@ -170,6 +172,120 @@ const getAllPayments = async (req, res, next) => {
   }
 };
 
+// @desc   List profile reports
+const getReports = async (req, res, next) => {
+  try {
+    const { page = 1, limit = 20, status } = req.query;
+    const query = {};
+    if (status) query.status = status;
+    const total = await Report.countDocuments(query);
+    const reports = await Report.find(query)
+      .populate('reporterId', 'firstName lastName email')
+      .populate('reportedUserId', 'firstName lastName email')
+      .sort({ createdAt: -1 })
+      .skip(getSkip(page, limit))
+      .limit(parseInt(limit));
+    sendSuccess(res, 200, 'Reports fetched', reports, getPaginationData(page, limit, total));
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc   Update report status
+const updateReportStatus = async (req, res, next) => {
+  try {
+    const { status, adminNote } = req.body;
+    if (!['pending', 'reviewed', 'resolved', 'dismissed'].includes(status)) {
+      return sendError(res, 400, 'Invalid status');
+    }
+    const report = await Report.findByIdAndUpdate(
+      req.params.id,
+      {
+        status,
+        adminNote,
+        reviewedBy: req.user._id,
+        reviewedAt: new Date(),
+      },
+      { new: true }
+    );
+    if (!report) return sendError(res, 404, 'Report not found');
+    sendSuccess(res, 200, 'Report updated', report);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc   Pending profession verifications (includes document for admin only)
+const getProfessionVerifications = async (req, res, next) => {
+  try {
+    const { page = 1, limit = 10 } = req.query;
+    const query = { 'professionVerification.status': 'pending' };
+    const total = await Profile.countDocuments(query);
+    const profiles = await Profile.find(query)
+      .populate('userId', 'firstName lastName email mobile')
+      .select('fullName occupation company professionVerification profilePhoto')
+      .sort({ 'professionVerification.submittedAt': 1 })
+      .skip(getSkip(page, limit))
+      .limit(parseInt(limit));
+    sendSuccess(res, 200, 'Profession verifications', profiles, getPaginationData(page, limit, total));
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc   Approve/reject profession verification
+const updateProfessionVerification = async (req, res, next) => {
+  try {
+    const { status, adminNote } = req.body;
+    if (!['verified', 'rejected'].includes(status)) {
+      return sendError(res, 400, 'Status must be verified or rejected');
+    }
+    const profile = await Profile.findById(req.params.id);
+    if (!profile) return sendError(res, 404, 'Profile not found');
+    if (!profile.professionVerification?.documentUrl) {
+      return sendError(res, 400, 'No profession document submitted');
+    }
+
+    profile.professionVerification.status = status;
+    profile.professionVerification.reviewedAt = new Date();
+    profile.professionVerification.adminNote = adminNote || '';
+    await profile.save({ validateBeforeSave: false });
+
+    await Notification.create({
+      userId: profile.userId,
+      type: status === 'verified' ? 'profile_approved' : 'profile_rejected',
+      title: status === 'verified' ? 'Profession Verified' : 'Profession Verification Rejected',
+      message: status === 'verified'
+        ? 'Your profession has been verified successfully.'
+        : (adminNote || 'Your profession verification was rejected. Please resubmit a valid document.'),
+    });
+
+    sendSuccess(res, 200, `Profession ${status}`, {
+      status: profile.professionVerification.status,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc   List support tickets
+const getSupportTickets = async (req, res, next) => {
+  try {
+    const { page = 1, limit = 20, status } = req.query;
+    const query = {};
+    if (status) query.status = status;
+    const total = await SupportTicket.countDocuments(query);
+    const tickets = await SupportTicket.find(query)
+      .populate('userId', 'firstName lastName email')
+      .sort({ createdAt: -1 })
+      .skip(getSkip(page, limit))
+      .limit(parseInt(limit));
+    sendSuccess(res, 200, 'Support tickets', tickets, getPaginationData(page, limit, total));
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getDashboardStats,
   getAllUsers,
@@ -178,4 +294,9 @@ module.exports = {
   updateVerificationStatus,
   getPendingVerifications,
   getAllPayments,
+  getReports,
+  updateReportStatus,
+  getProfessionVerifications,
+  updateProfessionVerification,
+  getSupportTickets,
 };

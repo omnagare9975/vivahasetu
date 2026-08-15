@@ -68,8 +68,8 @@ export default function Navbar() {
               <FiHeart className="text-white text-lg" />
             </div>
             <div>
-              <span className="text-xl font-heading font-bold text-gradient">VivahSetu</span>
-              <p className="text-[10px] text-gray-400 leading-none hidden sm:block">Find Your Perfect Match</p>
+              <span className="text-xl font-heading font-bold text-gradient">Vivansa</span>
+              <p className="text-[10px] text-gray-400 leading-none hidden sm:block">Find Your Perfect Life Partner</p>
             </div>
           </Link>
 

@@ -17,11 +17,18 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Handle token expiry globally
+// Auth endpoints that can return 401 without meaning "session expired"
+const AUTH_PUBLIC_PATHS = ['/auth/login', '/auth/register', '/auth/forgot-password', '/auth/reset-password'];
+
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const url = error.config?.url || '';
+    const isAuthPublic = AUTH_PUBLIC_PATHS.some((p) => url.includes(p));
+    const onLoginPage = typeof window !== 'undefined' && window.location.pathname === '/login';
+
+    // Only force-logout on expired session — never on wrong password / failed login
+    if (error.response?.status === 401 && !isAuthPublic && !onLoginPage) {
       localStorage.removeItem('vs_token');
       window.location.href = '/login';
     }

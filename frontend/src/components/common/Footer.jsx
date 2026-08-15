@@ -15,7 +15,7 @@ export default function Footer() {
               <div className="w-9 h-9 bg-primary-gradient rounded-xl flex items-center justify-center">
                 <FiHeart className="text-white text-lg" />
               </div>
-              <span className="text-xl font-heading font-bold text-white">VivahSetu</span>
+              <span className="text-xl font-heading font-bold text-white">Vivansa</span>
             </div>
             <p className="text-sm text-gray-400 mb-4 leading-relaxed">
               {t('footer.tagline')} — India's most trusted matrimony platform since 2026.
@@ -56,7 +56,7 @@ export default function Footer() {
             <ul className="space-y-2.5">
               {[
                 [t('footer.help'), '/help'], [t('footer.contact'), '/contact'],
-                [t('footer.success'), '/success-stories'], ['Safety Tips', '/safety'],
+                ['How to Use', '/how-to-use'], ['Safety Tips', '/help'],
               ].map(([label, href]) => (
                 <li key={label}>
                   <Link to={href} className="text-sm hover:text-primary-400 transition-colors">

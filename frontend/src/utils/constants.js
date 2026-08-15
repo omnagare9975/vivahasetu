@@ -1,5 +1,11 @@
 export const RELIGIONS = ['Hindu', 'Muslim', 'Christian', 'Sikh', 'Jain', 'Buddhist', 'Parsi', 'Jewish', 'Other'];
 
+export const CASTES = [
+  'Brahmin', 'Kshatriya', 'Vaishya', 'Kayastha', 'Maratha', 'Kunbi', 'Jat', 'Yadav',
+  'Reddy', 'Nair', 'Ezhava', 'Patel', 'Agarwal', 'Baniya', 'Rajput', 'Scheduled Caste',
+  'Scheduled Tribe', 'Other',
+];
+
 export const STATES = [
   'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
   'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka',

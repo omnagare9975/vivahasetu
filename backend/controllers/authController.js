@@ -6,11 +6,17 @@ const { sendSuccess, sendError } = require('../utils/apiResponse');
 const { generateAccessToken, generateRandomToken, hashToken } = require('../utils/generateToken');
 const { sendEmail, emailTemplates } = require('../services/emailService');
 const { calculateAge } = require('../utils/helpers');
+const { normalizeIndianMobile, isValidIndianMobile } = require('../utils/phoneValidation');
 
 // @desc   Register new user
 const register = async (req, res, next) => {
   try {
-    const { firstName, lastName, email, mobile, password, gender, dateOfBirth } = req.body;
+    const { firstName, lastName, email, password, gender, dateOfBirth } = req.body;
+    const mobile = normalizeIndianMobile(req.body.mobile);
+
+    if (!isValidIndianMobile(mobile)) {
+      return sendError(res, 400, 'Mobile number must be exactly 10 digits starting with 6–9');
+    }
 
     const existingUser = await User.findOne({ $or: [{ email }, { mobile }] });
     if (existingUser) {

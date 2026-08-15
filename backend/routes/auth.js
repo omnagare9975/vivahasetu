@@ -4,6 +4,7 @@ const { body } = require('express-validator');
 const { validate } = require('../middleware/validate');
 const { authLimiter } = require('../middleware/rateLimiter');
 const { protect } = require('../middleware/auth');
+const { isValidIndianMobile, normalizeIndianMobile } = require('../utils/phoneValidation');
 const {
   register, login, getMe, verifyEmail, forgotPassword,
   resetPassword, changePassword, updatePreferences,
@@ -13,7 +14,10 @@ const registerRules = [
   body('firstName').trim().notEmpty().withMessage('First name is required'),
   body('lastName').trim().notEmpty().withMessage('Last name is required'),
   body('email').isEmail().withMessage('Valid email required'),
-  body('mobile').isMobilePhone('en-IN').withMessage('Valid Indian mobile number required'),
+  body('mobile')
+    .customSanitizer((value) => normalizeIndianMobile(value))
+    .custom((value) => isValidIndianMobile(value))
+    .withMessage('Mobile number must be exactly 10 digits starting with 6–9'),
   body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
   body('gender').isIn(['male', 'female', 'other']).withMessage('Invalid gender'),
   body('dateOfBirth').isDate().withMessage('Valid date of birth required'),
