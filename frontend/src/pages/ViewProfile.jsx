@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import {
-  FiMapPin, FiBriefcase, FiHeart, FiBookmark,
+  FiMapPin, FiBriefcase, FiHeart, FiBookmark, FiMessageSquare,
   FiCheckCircle, FiStar, FiFlag, FiShield,
 } from 'react-icons/fi';
 import { fetchProfileById, clearViewedProfile } from '../redux/slices/profileSlice';
@@ -26,6 +26,7 @@ export default function ViewProfile() {
   const [shortlisted, setShortlisted] = useState(false);
   const [sendingInterest, setSendingInterest] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
+  const [startingChat, setStartingChat] = useState(false);
 
   useEffect(() => {
     dispatch(fetchProfileById(id));
@@ -46,6 +47,16 @@ export default function ViewProfile() {
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to send interest');
     } finally { setSendingInterest(false); }
+  };
+
+  const handleStartChat = async () => {
+    setStartingChat(true);
+    try {
+      const { data } = await api.get(`/messages/conversations/${id}`);
+      navigate('/messages', { state: { openConversation: data.data } });
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Could not start conversation');
+    } finally { setStartingChat(false); }
   };
 
   const handleShortlist = async () => {
@@ -116,6 +127,14 @@ export default function ViewProfile() {
                   className="btn-primary w-full"
                 >
                   <FiHeart /> {interestSent ? 'Interest Sent!' : t('match.send_interest')}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleStartChat}
+                  disabled={startingChat}
+                  className="btn-secondary w-full"
+                >
+                  <FiMessageSquare /> {startingChat ? 'Opening...' : 'Send Message'}
                 </button>
                 <button type="button" onClick={handleShortlist} className="btn-secondary w-full">
                   <FiBookmark /> {shortlisted ? 'Shortlisted ✓' : t('match.shortlist')}

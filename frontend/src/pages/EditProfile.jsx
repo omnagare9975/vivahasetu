@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useForm, useWatch } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { FiCamera, FiTrash2, FiStar, FiCheck, FiUpload, FiShield } from 'react-icons/fi';
+import { FiCamera, FiTrash2, FiStar, FiCheck, FiUpload, FiShield, FiChevronDown } from 'react-icons/fi';
 import {
   fetchMyProfile, updateProfile, uploadPhoto, deletePhoto, setProfilePhoto,
   uploadProfessionDocument,
@@ -237,26 +237,42 @@ export default function EditProfile() {
         )}
       </div>
 
-      <div className="flex gap-1 overflow-x-auto pb-2 mb-6 scrollbar-hide">
-        {TABS.map((tab) => (
-          <button
-            key={tab}
-            type="button"
-            onClick={() => setActiveTab(tab)}
-            className={`shrink-0 px-4 py-2 rounded-xl text-sm font-medium transition-colors whitespace-nowrap ${
-              activeTab === tab
-                ? 'bg-primary-gradient text-white shadow-sm'
-                : 'text-gray-600 bg-gray-100 hover:bg-gray-200'
-            }`}
+      {/* Tab Navigation — dropdown on mobile, pills on desktop */}
+      <div className="mb-5">
+        <div className="md:hidden relative">
+          <select
+            value={activeTab}
+            onChange={(e) => setActiveTab(e.target.value)}
+            className="w-full appearance-none bg-white border border-gray-200 rounded-2xl px-4 py-3.5 pr-10 text-sm font-semibold text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-300"
           >
-            {tabLabels[tab]}
-          </button>
-        ))}
+            {TABS.map((tab) => (
+              <option key={tab} value={tab}>{tabLabels[tab]}</option>
+            ))}
+          </select>
+          <FiChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+        </div>
+
+        <div className="hidden md:flex gap-1 overflow-x-auto pb-2 scrollbar-hide">
+          {TABS.map((tab) => (
+            <button
+              key={tab}
+              type="button"
+              onClick={() => setActiveTab(tab)}
+              className={`shrink-0 px-4 py-2 rounded-xl text-sm font-medium transition-colors whitespace-nowrap ${
+                activeTab === tab
+                  ? 'bg-primary-gradient text-white shadow-sm'
+                  : 'text-gray-600 bg-gray-100 hover:bg-gray-200'
+              }`}
+            >
+              {tabLabels[tab]}
+            </button>
+          ))}
+        </div>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         {activeTab !== 'photos' ? (
-          <div className="card p-6">
+          <div className="card p-4 md:p-6">
             {activeTab === 'personal' && (
               <PersonalFields register={register} errors={errors} t={t} casteValue={casteValue} />
             )}
@@ -501,7 +517,7 @@ function FamilyFields({ register, t, hasSiblingOnApp, linkedSiblings }) {
         <FormField label="Father's Name">
           <input {...register('fatherName')} className="input-field" />
         </FormField>
-        <FormField label="Father's Phone" hint="Private — not shown on public profile">
+        <FormField label="Father's Phone" hint="Private ΓÇö not shown on public profile">
           <input
             {...register('fatherPhone', {
               validate: (v) => !v || validateIndianMobile(v) || 'Enter 10-digit Indian mobile',
@@ -518,7 +534,7 @@ function FamilyFields({ register, t, hasSiblingOnApp, linkedSiblings }) {
         <FormField label="Mother's Name">
           <input {...register('motherName')} className="input-field" />
         </FormField>
-        <FormField label="Mother's Phone" hint="Private — not shown on public profile">
+        <FormField label="Mother's Phone" hint="Private ΓÇö not shown on public profile">
           <input
             {...register('motherPhone', {
               validate: (v) => !v || validateIndianMobile(v) || 'Enter 10-digit Indian mobile',
